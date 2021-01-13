@@ -1,7 +1,6 @@
 from random import randint
-from typing import Tuple
-import klassen
 import pygame
+import klassen
 import random
 
 
