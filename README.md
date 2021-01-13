@@ -3,7 +3,7 @@ Das Lebens einer einfachen Person
 
 ## Aktuelle Spielfunktionen
 * Weltgenerator
-* Steuerung (A,D sowie Leertaste)
+* Steuerung (A,D,I sowie Leertaste)
 * Abbauen der Blöcke
 
 ## Zukünftige Spielfunktionen
