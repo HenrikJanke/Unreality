@@ -52,50 +52,70 @@ def GegenstaendeLaden(Blockgroesse):
 
 
 # TESTFUNKTION um Blöcke zu gegenstände im Inventar zu bekommen
-def Block_zu_Gegenstand (Blockart,Item_Liste):
+def Block_zu_Gegenstand (Blockart,Item_Liste):    
     z = 0
+    x = randint(1,3)
     Added = False
+    Item_Laenge = 0
+    # Gras zu Erde und ReinerStein zu Bruchstein
+    if Blockart == "Gras":
+        Blockart = "Erde"
+    elif Blockart == "ReinerStein":
+        Blockart = "Bruchstein"
+    # Item_Liste länge, wenn 6 (also maximallänge geht es nicht weiter)
     for i in Item_Liste:
-        if i.Gegenstandsart == Blockart and Added==False:
-            # Wenn das Item schon im Inventar ist einen hinzufügen
-            print(Item_Liste[z].AnzahlCheck())
-            if not Item_Liste[z].Anzahl == Item_Liste[z].StackgroesseMax:
-                Item_Liste[z].Anzahl +=1
-                Added=True
-        # Neues Item erstellen und ins Inventar hinzufügen
-        elif  Added == False:
-            if Blockart == "Bruchstein":
-                Item = klassen.Bruchstein_GS(1,False,100)
-            elif Blockart == "Erde" or Blockart == "Gras":
-                Item = klassen.Erde_GS(1,True,2)
-            elif Blockart == "Eiche":
-                Item = klassen.Eiche_GS(1,False,2)
-            elif Blockart == "Birke":
-                Item = klassen.Birke_GS(1,False,2)
-            elif Blockart == "Diamant":
-                Item = klassen.Diamant_GS(1,False,3)
-            elif Blockart == "Eisen":
-                Item = klassen.Eisen_GS(1,False,2)
-            elif Blockart == "Gold":
-                Item = klassen.Gold_GS(1,False,2)
-            try:
-                Item.Verbrauchdauer()
-                Item.AnzahlCheck()
-                Item_Liste.append(Item)
-                Added = True
-            except:
-                print("Fehler: Block zu Gegenstand")
-        z+=1
-
+        Item_Laenge += 1
+    print(Item_Laenge)
+       
+    # Item Hinzufügen wenn es noch keins gibt
+    if not Item_Liste==[]:
+        for i in Item_Liste:
+            if i.Gegenstandsart == Blockart:
+                print("Bestehendes Item:", Blockart)
+                # Wenn das Item schon im Inventar ist einen hinzufügen
+                Item_Liste[z].AnzahlCheck()
+                if not Item_Liste[z].Anzahl == Item_Liste[z].StackgroesseMax:
+                    Item_Liste[z].Anzahl +=1
+                    Added=True
+                    Blockart = "Fertig"
+            z+=1
+    # Wenn ein Stack voll ist wird ein neuer erstellt
+    if not Item_Liste==[] and Item_Laenge<6 and Added==True:
+        a = 0
+        for i in Item_Liste:
+            if Item_Liste[a].StackgroesseMax == Item_Liste[a].Anzahl:
+                Added = False
+            a+=1
+    # Neues Item erstellen und ins Inventar hinzufügen
+    if Added == False and Item_Laenge<6:        
+        if Blockart == "Bruchstein":
+            Item = klassen.Bruchstein_GS(1,False,100)
+        elif Blockart == "Erde" or Blockart == "Gras":
+            Item = klassen.Erde_GS(1,True,2)
+        elif Blockart == "Eiche":
+            Item = klassen.Eiche_GS(1,False,2)
+        elif Blockart == "Birke":
+            Item = klassen.Birke_GS(1,False,2)
+        elif Blockart == "Diamant":
+            Item = klassen.Diamant_GS(x,False,3)
+        elif Blockart == "Eisen":
+            Item = klassen.Eisen_GS(1,False,2)
+        elif Blockart == "Gold":
+            Item = klassen.Gold_GS(1,False,2)
+        print("Neues Item:", Blockart)
+        try:
+            Item.Verbrauchdauer()
+            Item.AnzahlCheck()
+            Item_Liste.append(Item)
+            Added = True
+            #break
+        except:
+            print("Fehler: Block zu Gegenstand", Blockart)
+        Blockart = "Fertig"
+    
+    # Ausgabe des Aktuellen Inventars mit Anzahl der Blöcke
+    for help in Item_Liste:
+        print(help.Gegenstandsart,help.Anzahl)
+    print("######################")
 
     return Item_Liste
-
-"""eins = klassen.Gold(2,2)
-Inv1 = klassen.Eisen_GS(1,False,20)
-Inv2 = klassen.Eisen_GS(1,False,3)
-
-Inv1.AnzahlCheck()
-Inv1.Verbrauchdauer()
-
-ki = [Inv1,Inv2]
-print(Block_zu_Gegenstand(eins.Blockart,ki)[2])"""
