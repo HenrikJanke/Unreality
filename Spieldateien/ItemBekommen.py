@@ -25,10 +25,10 @@ Sprungintensitaet, Sprung,Sprungverbot, zaehler = -16,False,False,0
 Linkserlaubnis,Rechtserlaubnis,Obenerlaubnis = False,False,False
 Links_klick, Inv_Pointer = False,1
 HoverX, HUD_Aktiv = 0, False
-Eins = klassen.Birke_GS(1,True,1)
-Eins.Verbrauchdauer()
-Eins.AnzahlCheck()
-Inventar, InventarName = [Eins],[Eins.Gegenstandsart]
+
+Schwert = klassen.Schwert(1,True)
+Spitzhacke = klassen.Spitzhacke(1,True)
+Inventar, InventarBilder = [Schwert,Spitzhacke],[]
 
 
 
@@ -89,8 +89,9 @@ if Lautstaerke >= 0.95:
     pygame.mixer.music.set_volume(Lautstaerke-0.96)
 
 while True:
-    # Formen auf der Karte zurücksetzen
+    # Formen und Inventarr auf der Karte zurücksetzen
     Formen =[]
+    InventarBilder = []
     
     # Inventar mit den Mausrad durchgehen
     if Inv_Pointer < 1:
@@ -187,9 +188,7 @@ while True:
         Block = dict[Neuer_Cursor.collidelist(Formen)]
         # Ausgabe der Blockart des Objektes, stellt da das ein Objekt gelöscht wird wodurch später items für das Inventar gemacht werden können sowie die Abbaudauer
         Inventar = Funktionen.Block_zu_Gegenstand(Block.Blockart,Inventar)
-        print(Inventar[1].Anzahl)
-
-        # an der Stelle Block wird der Block aus der Liste entfernt
+        # an der Stelle Block wird der Block aus der Liste entfernt, möglicher Stackunderflow
         dict.pop(Neuer_Cursor.collidelist(Formen))
    
    
@@ -210,19 +209,55 @@ while True:
         Fenster.blit(Hover,((FensterBreite-(Blockgroesse*12.5))+HoverX*Blockgroesse,Blockgroesse/2))
         
         # Inventar Testwerte
-        # Erste Position
-        Fenster.blit(GS_Schwert,((FensterBreite-(Blockgroesse*12),Blockgroesse)))
-        # Zweite Position
-        Fenster.blit(GS_Spitzhacke,((FensterBreite-(Blockgroesse*10),Blockgroesse)))
-        # Dritte Position
-        Fenster.blit(GS_Erde,((FensterBreite-(Blockgroesse*8),Blockgroesse)))
-        # Vierte Position
-        Fenster.blit(GS_Diamant,((FensterBreite-(Blockgroesse*6),Blockgroesse)))
-        # Fünfte Position
-        Fenster.blit(GS_Eisen,((FensterBreite-(Blockgroesse*4),Blockgroesse)))
-        # Sechste Position
-        Fenster.blit(GS_Eiche,((FensterBreite-(Blockgroesse*2),Blockgroesse)))
+        if not Inventar == []:
+            for i in Inventar:
+                i = i.Gegenstandsart
+                if i == "Bruchstein":
+                    InventarBilder.append(GS_Bruchstein)
+                elif i == "Erde":
+                    InventarBilder.append(GS_Erde)
+                elif i == "Eiche":
+                    InventarBilder.append(GS_Eiche)
+                elif i == "Birke":
+                    InventarBilder.append(GS_Birke)
+                elif i == "Diamant":
+                    InventarBilder.append(GS_Diamant)
+                elif i == "Eisen":
+                    InventarBilder.append(GS_Eisen)
+                elif i == "Gold":
+                    InventarBilder.append(GS_Gold)
+                elif i == "Schwert":
+                    InventarBilder.append(GS_Schwert)
+                elif i == "Spitzhacke":
+                    InventarBilder.append(GS_Spitzhacke)
 
+            # Erste Position
+            Fenster.blit(InventarBilder[0],((FensterBreite-(Blockgroesse*12),Blockgroesse)))
+            # Zweite Position
+            try:
+                Fenster.blit(InventarBilder[1],((FensterBreite-(Blockgroesse*10),Blockgroesse)))
+            except:
+                pass
+            # Dritte Position
+            try:
+                Fenster.blit(InventarBilder[2],((FensterBreite-(Blockgroesse*8),Blockgroesse)))
+            except:
+                pass
+            # Vierte Position
+            try:
+                Fenster.blit(InventarBilder[3],((FensterBreite-(Blockgroesse*6),Blockgroesse)))
+            except:
+                pass
+            # Fünfte Position
+            try:
+                Fenster.blit(InventarBilder[4],((FensterBreite-(Blockgroesse*4),Blockgroesse)))
+            except:
+                pass
+            # Sechste Position
+            try:
+                Fenster.blit(InventarBilder[5],((FensterBreite-(Blockgroesse*2),Blockgroesse)))
+            except:
+                pass
 
 
 
