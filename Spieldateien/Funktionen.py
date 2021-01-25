@@ -65,7 +65,6 @@ def Block_zu_Gegenstand (Blockart,Item_Liste):
     # Item_Liste länge, wenn 6 (also maximallänge geht es nicht weiter)
     for i in Item_Liste:
         Item_Laenge += 1
-    print(Item_Laenge)
        
     # Item Hinzufügen wenn es noch keins gibt
     if not Item_Liste==[]:
