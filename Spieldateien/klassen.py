@@ -292,7 +292,7 @@ class Gegenstände():
             self.VerbrauchDauer = -1
             self.KannKapputtGehen = False
     def AnzahlCheck(self):
-        if self.Anzahl > self.StackgroesseMax:
+        if self.Anzahl >= self.StackgroesseMax:
             self.Anzahl = self.StackgroesseMax
 
 class Platzierbare(Gegenstände):
@@ -395,7 +395,7 @@ class Gold_GS(Platzierbare):
         super().__init__(Gegenstandsart, Anzahl, KannKapputtGehen, VerbrauchDauer, Abbaukraft=Abbaukraft, Schadenswert=Schadenswert, StackgroesseMax=StackgroesseMax)
 
 class Schwert(Werkzeuge):
-    def __init__(self, Anzahl, KannKapputtGehen, VerbrauchDauer, Abbaukraft=1, Schadenswert=25, StackgroesseMax=1, Gegenstandsart='Schwert'):
+    def __init__(self, Anzahl, KannKapputtGehen, VerbrauchDauer=100, Abbaukraft=1, Schadenswert=25, StackgroesseMax=1, Gegenstandsart='Schwert'):
         self.Abbaukraft = Abbaukraft
         self.Schadenswert = Schadenswert
         self.Gegenstandsart = Gegenstandsart
@@ -406,7 +406,7 @@ class Schwert(Werkzeuge):
         super().__init__(Abbaukraft, Schadenswert, Gegenstandsart, Anzahl, KannKapputtGehen, VerbrauchDauer, StackgroesseMax=StackgroesseMax)
 
 class Spitzhacke(Werkzeuge):
-    def __init__(self, Anzahl, KannKapputtGehen, VerbrauchDauer, Abbaukraft=25, Schadenswert=1, StackgroesseMax=1, Gegenstandsart='Spitzhacke'):
+    def __init__(self, Anzahl, KannKapputtGehen, VerbrauchDauer=100, Abbaukraft=25, Schadenswert=1, StackgroesseMax=1, Gegenstandsart='Spitzhacke'):
         self.Abbaukraft = Abbaukraft
         self.Schadenswert = Schadenswert
         self.Gegenstandsart = Gegenstandsart
