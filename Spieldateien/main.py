@@ -214,6 +214,7 @@ while True:
         # Inventar Testwerte
         if not Inventar == []:
             for i in Inventar:
+                Zahl = i.Anzahl
                 i = i.Gegenstandsart
                 if i == "Bruchstein":
                     InventarBilder.append(GS_Bruchstein)
