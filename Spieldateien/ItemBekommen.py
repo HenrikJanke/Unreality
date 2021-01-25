@@ -124,6 +124,10 @@ while True:
                     HUD_Aktiv = False
                 elif HUD_Aktiv==False:
                     HUD_Aktiv =True
+            # Wegwerfen von Items Taste Q
+            if event.key == pygame.K_q:
+                if not Inventar == []:
+                    Inventar.pop(Inv_Pointer-1)
     # Objekte als Formen umgesetzt und danach der Liste Formen hinzugefügt
     for i in dict:
         k = pygame.draw.rect(Sprunghilfe,i.Farbe,(i.xPosition,i.yPosition,Blockgroesse,Blockgroesse))
@@ -264,6 +268,8 @@ while True:
 
     # Tastenanschläge bekommen Variable defenieren
     TastenAbfangen = pygame.key.get_pressed()    
+    
+    
 
     # Rechtsbewegung
     if RechtsCheckFigur.collidelist(Formen)!=-1:
