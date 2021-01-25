@@ -194,9 +194,6 @@ while True:
         Inventar = Funktionen.Block_zu_Gegenstand(Block.Blockart,Inventar)
         # an der Stelle Block wird der Block aus der Liste entfernt, möglicher Stackunderflow
         dict.pop(Neuer_Cursor.collidelist(Formen))
-   
-   
-   
     else:
         Links_klick = False
        
