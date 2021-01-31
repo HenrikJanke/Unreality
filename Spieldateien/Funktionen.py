@@ -104,7 +104,6 @@ def Block_zu_Gegenstand (Blockart,Item_Liste):
             Item = klassen.Eisen_GS(1,False,2)
         elif Blockart == "Gold":
             Item = klassen.Gold_GS(1,False,2)
-        print("Neues Item:", Blockart)
         try:
             Item.Verbrauchdauer()
             Item.AnzahlCheck()
@@ -112,13 +111,8 @@ def Block_zu_Gegenstand (Blockart,Item_Liste):
             Added = True
             #break
         except:
-            print("Fehler: Block zu Gegenstand", Blockart)
+            pass
         Blockart = "Fertig"
-    
-    # Ausgabe des Aktuellen Inventars mit Anzahl der Blöcke
-    for help in Item_Liste:
-        print(help.Gegenstandsart,help.Anzahl)
-    print("######################")
 
     return Item_Liste
 
