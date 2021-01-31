@@ -6,7 +6,7 @@ Das Lebens einer einfachen Person
 * Steuerung (A,D,Leertaste sowie Q für Ausgewähltes Item wegwerfen)
 * Abbauen der Blöcke
 * Gegenstände ins Inventar bekommen
+* Platzieren von bereits bekommenen Blöcken
 
 ## Zukünftige Spielfunktionen
-* Platzieren von bereits bekommenen Blöcken
 * Herstellen von anderen Spielobjekten (Schwerter/Spitzhacken)
