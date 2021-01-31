@@ -22,16 +22,18 @@ Geschwindigkeit= 3
 Sprungintensitaet, Sprung,Sprungverbot, zaehler = -16,False,False,0
 Linkserlaubnis,Rechtserlaubnis,Obenerlaubnis = False,False,False
 Links_klick, Inv_Pointer = False,1
-HoverX, HUD_Aktiv = 0, False
+HoverX, HUD_Aktiv = 0, True
 Schwert = klassen.Schwert(1,True)
 Spitzhacke = klassen.Spitzhacke(1,True)
 Inventar, InventarBilder = [Schwert,Spitzhacke],[]
+RechtsBewegung = True
 
 
 
 
 # Grafisch/Audische Variablen
 pygame.init()
+pygame.font.init()
 
 # alle Bilder laden
 Grafiken = Funktionen.BilderLaden(Blockgroesse)
@@ -117,11 +119,6 @@ while True:
                 Inv_Pointer += 1
         # Wenn Taste I gedrückt dann das Inventar öffnen
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_i:
-                if HUD_Aktiv == True:
-                    HUD_Aktiv = False
-                elif HUD_Aktiv==False:
-                    HUD_Aktiv =True
             # Wegwerfen von Items Taste Q
             if event.key == pygame.K_q:
                 try:
@@ -198,7 +195,37 @@ while True:
         dict.pop(Neuer_Cursor.collidelist(Formen))
     else:
         Links_klick = False
-       
+    # InventarBilder erstellen
+    for i in Inventar:
+        Zahl = i.Anzahl
+        i = i.Gegenstandsart
+        if i == "Bruchstein":
+            InventarBilder.append(GS_Bruchstein)
+        elif i == "Erde":
+            InventarBilder.append(GS_Erde)
+        elif i == "Eiche":
+            InventarBilder.append(GS_Eiche)
+        elif i == "Birke":
+            InventarBilder.append(GS_Birke)
+        elif i == "Diamant":
+            InventarBilder.append(GS_Diamant)
+        elif i == "Eisen":
+            InventarBilder.append(GS_Eisen)
+        elif i == "Gold":
+            InventarBilder.append(GS_Gold)
+        elif i == "Schwert":
+            InventarBilder.append(GS_Schwert)
+        elif i == "Spitzhacke":
+            InventarBilder.append(GS_Spitzhacke)
+    
+    # Anzeige der Items am Körper
+    if not Inventar == []:
+        try:
+            Bild_Koerper,X_Bild,Y_Bild = Funktionen.Item_Am_Koerper(InventarBilder[Inv_Pointer-1],RechtsBewegung,Blockgroesse,x,y,Formen,Sprunghilfe) 
+            Fenster.blit(Bild_Koerper,(X_Bild,Y_Bild))
+        except:
+            pass
+
     # Wenn I gedrückt
     if HUD_Aktiv == True:
         Fenster.blit(GuiOverlay,((FensterBreite-(Blockgroesse*12.5)),Blockgroesse/2))
@@ -207,59 +234,47 @@ while True:
             HoverX = 0
         else:
             HoverX = (Inv_Pointer-1)*2
-        
         # Anzeige in Welcher Position man ist
         Fenster.blit(Hover,((FensterBreite-(Blockgroesse*12.5))+HoverX*Blockgroesse,Blockgroesse/2))
-        
         # Inventar Testwerte
         if not Inventar == []:
-            for i in Inventar:
-                Zahl = i.Anzahl
-                i = i.Gegenstandsart
-                if i == "Bruchstein":
-                    InventarBilder.append(GS_Bruchstein)
-                elif i == "Erde":
-                    InventarBilder.append(GS_Erde)
-                elif i == "Eiche":
-                    InventarBilder.append(GS_Eiche)
-                elif i == "Birke":
-                    InventarBilder.append(GS_Birke)
-                elif i == "Diamant":
-                    InventarBilder.append(GS_Diamant)
-                elif i == "Eisen":
-                    InventarBilder.append(GS_Eisen)
-                elif i == "Gold":
-                    InventarBilder.append(GS_Gold)
-                elif i == "Schwert":
-                    InventarBilder.append(GS_Schwert)
-                elif i == "Spitzhacke":
-                    InventarBilder.append(GS_Spitzhacke)
-
             # Erste Position
             Fenster.blit(InventarBilder[0],((FensterBreite-(Blockgroesse*12),Blockgroesse)))
+            Render,X_Inv,Y_Inv = Funktionen.Item_Anzahl_Schrift(Inventar,0,Blockgroesse,12,FensterBreite)
+            Fenster.blit(Render,(X_Inv,Y_Inv))
             # Zweite Position
             try:
                 Fenster.blit(InventarBilder[1],((FensterBreite-(Blockgroesse*10),Blockgroesse)))
+                Render,X_Inv,Y_Inv = Funktionen.Item_Anzahl_Schrift(Inventar,1,Blockgroesse,10,FensterBreite)
+                Fenster.blit(Render,(X_Inv,Y_Inv))
             except:
                 pass
             # Dritte Position
             try:
                 Fenster.blit(InventarBilder[2],((FensterBreite-(Blockgroesse*8),Blockgroesse)))
+                Render,X_Inv,Y_Inv = Funktionen.Item_Anzahl_Schrift(Inventar,2,Blockgroesse,8,FensterBreite)
+                Fenster.blit(Render,(X_Inv,Y_Inv))
             except:
                 pass
             # Vierte Position
             try:
                 Fenster.blit(InventarBilder[3],((FensterBreite-(Blockgroesse*6),Blockgroesse)))
+                Render,X_Inv,Y_Inv = Funktionen.Item_Anzahl_Schrift(Inventar,3,Blockgroesse,6,FensterBreite)
+                Fenster.blit(Render,(X_Inv,Y_Inv))
             except:
                 pass
             # Fünfte Position
             try:
                 Fenster.blit(InventarBilder[4],((FensterBreite-(Blockgroesse*4),Blockgroesse)))
+                Render,X_Inv,Y_Inv = Funktionen.Item_Anzahl_Schrift(Inventar,4,Blockgroesse,4,FensterBreite)
+                Fenster.blit(Render,(X_Inv,Y_Inv))
             except:
                 pass
             # Sechste Position
             try:
                 Fenster.blit(InventarBilder[5],((FensterBreite-(Blockgroesse*2),Blockgroesse)))
+                Render,X_Inv,Y_Inv = Funktionen.Item_Anzahl_Schrift(Inventar,5,Blockgroesse,2,FensterBreite)
+                Fenster.blit(Render,(X_Inv,Y_Inv))
             except:
                 pass
 
@@ -268,9 +283,6 @@ while True:
 
     # Tastenanschläge bekommen Variable defenieren
     TastenAbfangen = pygame.key.get_pressed()    
-    
-    
-
     # Rechtsbewegung
     if RechtsCheckFigur.collidelist(Formen)!=-1:
         #Check ob es in einen Blcok steht damit es nach links noch gehen kann
@@ -280,6 +292,7 @@ while True:
     if TastenAbfangen[pygame.K_d]:
         if not x>FensterBreite-Blockgroesse and Figur.collidelist(Formen)==-1 or Rechtserlaubnis==True :
             if not x>FensterBreite-Blockgroesse:
+                RechtsBewegung = True
                 x+=Geschwindigkeit
 
             Sprungverbot = False
@@ -294,6 +307,7 @@ while True:
     if TastenAbfangen[pygame.K_a]:
         if not x<0 and Figur.collidelist(Formen)==-1 or Linkserlaubnis==True:
             if not x<0:
+                RechtsBewegung = False
                 x-=Geschwindigkeit
             Sprungverbot=False
             Rechtserlaubnis = True
