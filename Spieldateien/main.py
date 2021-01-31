@@ -22,6 +22,7 @@ Geschwindigkeit= 3
 Sprungintensitaet, Sprung,Sprungverbot, zaehler = -16,False,False,0
 Linkserlaubnis,Rechtserlaubnis,Obenerlaubnis = False,False,False
 Links_klick, Inv_Pointer = False,1
+Rechts_klick = False
 HoverX, HUD_Aktiv = 0, True
 Schwert = klassen.Schwert(1,True)
 Spitzhacke = klassen.Spitzhacke(1,True)
@@ -112,6 +113,9 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 Links_klick = True
+            # Rechtsklick
+            elif event.button == 3:
+                Rechts_klick = True
             # Mit Mausrad durch das Inventar gehen
             elif event.button == 5:
                 Inv_Pointer -= 1
@@ -184,7 +188,6 @@ while True:
         coursor_Farbe = coursor_Farbe_Default
 
 
-
     # Abbauen des Blockes wenn Links gedrückt und wenn Neuer_Cursor in AbbauhintergrundCheck ist
     if Neuer_Cursor.collidelist(Formen)!=-1 and AbbauHintergrundCheck.colliderect(Neuer_Cursor)==True and Links_klick == True:
         # Herausfinden des Objektes um die Abbaukraft und die Stärke des Blockes herauszufinden sowie Später die item zugabe
@@ -218,6 +221,58 @@ while True:
         elif i == "Spitzhacke":
             InventarBilder.append(GS_Spitzhacke)
     
+    # Hier Platzieren einfügen (MausX, MausY)
+    if Neuer_Cursor.collidelist(Formen)==-1 and AbbauHintergrundCheck.colliderect(Neuer_Cursor)==True and Rechts_klick == True:
+        try:
+            while MausX%Blockgroesse != 0:
+                MausX-=1
+            while MausY%Blockgroesse != 0:
+                MausY-=1
+            # Potenzieller Finaler Block, rect(Fenster,Farbe,(x,y,Breite,Hoehe))
+            potenzieller_block = pygame.draw.rect(Sprunghilfe,(0,0,0),(MausX,MausY,Blockgroesse,Blockgroesse))
+            # Blöcke die Testen ob Links, Rechts, Oben oder Unten ein anderer Block ist damit die sachen nicht in der Luft platizert werden können
+            Links = pygame.draw.rect(Sprunghilfe,(0,0,0),(MausX-Blockgroesse,MausY,Blockgroesse,Blockgroesse))
+            Rechts = pygame.draw.rect(Sprunghilfe,(0,0,0),(MausX+Blockgroesse,MausY,Blockgroesse,Blockgroesse))
+            Oben = pygame.draw.rect(Sprunghilfe,(0,0,0),(MausX,(MausY-Blockgroesse),Blockgroesse,Blockgroesse))
+            Unten = pygame.draw.rect(Sprunghilfe,(0,0,0),(MausX,MausY+Blockgroesse,Blockgroesse,Blockgroesse))
+            if Links.collidelist(Formen)!=-1 or Rechts.collidelist(Formen)!=-1 or Oben.collidelist(Formen)!=-1 or Unten.collidelist(Formen)!=-1:
+                print("Ja")
+                Nicht_in_Luft = True
+            else:
+                Nicht_in_Luft = False
+            if not Inventar[Inv_Pointer-1].Gegenstandsart in ["Spitzhacke", "Schwert"] and Figur.colliderect(Neuer_Cursor)==False and Figur.colliderect(potenzieller_block)==False and Nicht_in_Luft==True:
+                Gegenstand = Inventar[Inv_Pointer-1]
+                Gegenstand_Art = Gegenstand.Gegenstandsart
+                if Gegenstand.Anzahl > 1:
+                    Inventar[Inv_Pointer-1].Anzahl -= 1
+                else:
+                    Inventar.pop(Inv_Pointer-1)
+                if Gegenstand_Art == "ReinerStein":
+                    Neuer_Block = klassen.ReinerStein(MausX,MausY)
+                elif Gegenstand_Art == "Erde":
+                    Neuer_Block = klassen.Erde(MausX,MausY)
+                    Neuer_Block.Blockart = "Erde"
+                elif Gegenstand_Art == "Eisen":
+                    Neuer_Block = klassen.Eisen(MausX,MausY)
+                elif Gegenstand_Art == "Gold":
+                    Neuer_Block = klassen.Gold(MausX,MausY)
+                elif Gegenstand_Art == "Diamant":
+                    Neuer_Block = klassen.Diamant(MausX,MausY)
+                elif Gegenstand_Art == "Eiche":
+                    Neuer_Block = klassen.Eiche(MausX,MausY)
+                elif Gegenstand_Art == "Birke":
+                    Neuer_Block = klassen.Birke(MausX,MausY)
+                elif Gegenstand_Art == "Bruchstein":
+                    Neuer_Block = klassen.Bruchstein(MausX,MausY)
+                dict.append(Neuer_Block)
+                
+                print(Gegenstand.Anzahl)
+            else:
+                Rechts_klick = False
+        except:
+            pass
+    Rechts_klick = False
+
     # Anzeige der Items am Körper
     if not Inventar == []:
         try:
