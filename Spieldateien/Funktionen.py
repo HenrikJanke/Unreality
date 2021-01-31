@@ -2,6 +2,7 @@ from random import randint
 import pygame
 import klassen
 import random
+pygame.font.init()
 
 
 def Blockgroesse(Breite,Hoehe):
@@ -18,6 +19,8 @@ def LaengeInBloecken(Breite,Hoehe):
 def HoeheInBloecken(Breite,Hoehe):
     Groesse = Blockgroesse(Breite,Hoehe)
     return int(Hoehe/Groesse)
+
+
 
 
 def BilderLaden(Blockgroesse):
@@ -118,3 +121,39 @@ def Block_zu_Gegenstand (Blockart,Item_Liste):
     print("######################")
 
     return Item_Liste
+
+def Item_Anzahl_Schrift(Inventar,Position,Blockgroesse,xPosition_Mulitplikator,FensterBreite):
+    Anzahl=Inventar[Position].Anzahl
+    x,y = 0,Blockgroesse+20
+    if Inventar[Position].Gegenstandsart in ["Spitzhacke","Schwert"]:
+        x = -100
+        y = -100
+    elif Anzahl<10:
+        x = FensterBreite-(Blockgroesse*xPosition_Mulitplikator)+30
+    else:
+        x = FensterBreite-(Blockgroesse*xPosition_Mulitplikator)+20
+
+    font = pygame.font.SysFont('Arial', 18) 
+    render = font.render(str(Anzahl),True,(255,255,255))
+    return render,x,y
+
+def Item_Am_Koerper(Bild,Rechts,Blockgroesse,X_Pos_Block,Y_Pos_Block,Beruehren,Draw_Hintergrund):
+    x,y = -100,-100
+    # Bild Verkleinern
+    Bild = pygame.transform.scale(Bild,(int(Blockgroesse/1.2),int(Blockgroesse/1.2)))
+    # Wenn Links Bild Spiegeln
+    
+    if Rechts == False:
+        Im_Block = pygame.draw.rect(Draw_Hintergrund,(0,0,0),(X_Pos_Block-int(Blockgroesse/1.3),Y_Pos_Block-int(Blockgroesse/2),int(Blockgroesse/2),int(Blockgroesse/2)))
+        if Im_Block.collidelist(Beruehren)==-1:
+            Bild = pygame.transform.flip(Bild,True,False)
+            x = X_Pos_Block-int(Blockgroesse/1.3)
+            y = Y_Pos_Block-int(Blockgroesse/2)
+    else:
+        Im_Block = pygame.draw.rect(Draw_Hintergrund,(0,0,0),(X_Pos_Block+int(Blockgroesse/1.3),Y_Pos_Block-int(Blockgroesse/2),int(Blockgroesse/2),int(Blockgroesse/2)))
+        if Im_Block.collidelist(Beruehren)==-1:
+            x = X_Pos_Block+int(Blockgroesse/1.3)
+            y = Y_Pos_Block-int(Blockgroesse/2)
+
+
+    return Bild,x,y
