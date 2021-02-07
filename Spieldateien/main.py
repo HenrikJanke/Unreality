@@ -28,6 +28,8 @@ Schwert = klassen.Schwert(1,True)
 Spitzhacke = klassen.Spitzhacke(1,True)
 Inventar, InventarBilder = [Schwert,Spitzhacke],[]
 RechtsBewegung = True
+Aus_Dem_Bildschirm = False
+Rechts_Behinderung, Links_Behinderung = False,False
 
 
 
@@ -221,6 +223,34 @@ while True:
         elif i == "Spitzhacke":
             InventarBilder.append(GS_Spitzhacke)
     
+    # Endlosgehen
+    # Erstellen von Vierecken bei den X "Schranken"
+    Links_Schranke = pygame.draw.rect(Fenster,(0,0,0),(0,y,Blockgroesse/2,Blockgroesse/2))
+    Rechts_Schranke = pygame.draw.rect(Fenster,(0,0,0),(FensterBreite-Blockgroesse,y,Blockgroesse/2,Blockgroesse/2))
+    # Links aus dem Bildschirm
+    if x<-Blockgroesse and Rechts_Schranke.collidelist(Formen)==-1:
+        x = FensterBreite
+        y-=5
+        Aus_Dem_Bildschirm = True
+    # Rechts aus dem Bildschirm
+    elif x>FensterBreite and Links_Schranke.collidelist(Formen)==-1:
+        y-=5
+        x = 1
+        Aus_Dem_Bildschirm = True
+        Rechts_Behinderung = True
+    elif Links_Schranke.collidelist(Formen)!=-1 and x>FensterBreite-Blockgroesse:
+        x = FensterBreite-Blockgroesse
+        Links_Behinderung = True
+        Aus_Dem_Bildschirm = True
+    elif Rechts_Schranke.collidelist(Formen)!=-1 and x <= 0:
+        x = 0
+        Rechts_Behinderung = True
+        Aus_Dem_Bildschirm = True
+    else:
+        Aus_Dem_Bildschirm = False
+        Rechts_Behinderung = False
+        Links_Behinderung = False
+
     # Hier Platzieren einfügen (MausX, MausY)
     if Neuer_Cursor.collidelist(Formen)==-1 and AbbauHintergrundCheck.colliderect(Neuer_Cursor)==True and Rechts_klick == True:
         try:
@@ -342,13 +372,12 @@ while True:
     if RechtsCheckFigur.collidelist(Formen)!=-1:
         #Check ob es in einen Blcok steht damit es nach links noch gehen kann
         Rechtserlaubnis = False
-        if UntenCheckFigur.collidelist(Formen)==-1 and not y+Blockgroesse>FensterHoehe:
+        if UntenCheckFigur.collidelist(Formen)==-1 and not y+Blockgroesse>FensterHoehe and Aus_Dem_Bildschirm == False:
             y+=Geschwindigkeit
     if TastenAbfangen[pygame.K_d]:
-        if not x>FensterBreite-Blockgroesse and Figur.collidelist(Formen)==-1 or Rechtserlaubnis==True :
-            if not x>FensterBreite-Blockgroesse:
-                RechtsBewegung = True
-                x+=Geschwindigkeit
+        if Figur.collidelist(Formen)==-1 and Links_Behinderung == False or Rechtserlaubnis==True  :
+            RechtsBewegung = True
+            x+=Geschwindigkeit
 
             Sprungverbot = False
             Rechtserlaubnis = False
@@ -357,21 +386,21 @@ while True:
     # Linksbewegung
     if LinksCheckFigur.collidelist(Formen)!=-1:
         Linkserlaubnis= False
-        if UntenCheckFigur.collidelist(Formen)==-1 and not y+Blockgroesse>FensterHoehe:
+        if UntenCheckFigur.collidelist(Formen)==-1 and not y+Blockgroesse>FensterHoehe and Aus_Dem_Bildschirm == False:
             y+=Geschwindigkeit
     if TastenAbfangen[pygame.K_a]:
-        if not x<0 and Figur.collidelist(Formen)==-1 or Linkserlaubnis==True:
-            if not x<0:
-                RechtsBewegung = False
-                x-=Geschwindigkeit
+        if Figur.collidelist(Formen)==-1 and Rechts_Behinderung == False or Linkserlaubnis==True :
+            RechtsBewegung = False
+            x-=Geschwindigkeit
             Sprungverbot=False
             Rechtserlaubnis = True
             Linkserlaubnis=False
 
     # Konstantes Fallen
-    if Figur.collidelist(Formen)==-1 and not y+(Blockgroesse)>FensterHoehe:
-        y+=Geschwindigkeit
-        zaehler +=1
+    if Figur.collidelist(Formen)==-1 and not y+(Blockgroesse)>FensterHoehe and Aus_Dem_Bildschirm == False:
+        if Aus_Dem_Bildschirm == False:
+            y+=Geschwindigkeit
+            zaehler +=1
     
     # Bewegung auf dem Block 
     elif Figur.collidelist(Formen)>=0 and not y+(Blockgroesse)>FensterHoehe:
