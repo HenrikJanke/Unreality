@@ -225,8 +225,8 @@ while True:
     
     # Endlosgehen
     # Erstellen von Vierecken bei den X "Schranken"
-    Links_Schranke = pygame.draw.rect(Fenster,(0,0,0),(0,y,Blockgroesse/2,Blockgroesse/2))
-    Rechts_Schranke = pygame.draw.rect(Fenster,(0,0,0),(FensterBreite-Blockgroesse,y,Blockgroesse/2,Blockgroesse/2))
+    Links_Schranke = pygame.draw.rect(Sprunghilfe,(0,0,0),(0,y,Blockgroesse/2,Blockgroesse/2))
+    Rechts_Schranke = pygame.draw.rect(Sprunghilfe,(0,0,0),(FensterBreite-Blockgroesse,y,Blockgroesse/2,Blockgroesse/2))
     # Links aus dem Bildschirm
     if x<-Blockgroesse and Rechts_Schranke.collidelist(Formen)==-1:
         x = FensterBreite
@@ -238,10 +238,12 @@ while True:
         x = 1
         Aus_Dem_Bildschirm = True
         Rechts_Behinderung = True
+    # Nicht nach Links wenn dort ein Block ist
     elif Links_Schranke.collidelist(Formen)!=-1 and x>FensterBreite-Blockgroesse:
         x = FensterBreite-Blockgroesse
         Links_Behinderung = True
         Aus_Dem_Bildschirm = True
+    # Nicht nach Rechts wenn dort ein Block steht
     elif Rechts_Schranke.collidelist(Formen)!=-1 and x <= 0:
         x = 0
         Rechts_Behinderung = True
