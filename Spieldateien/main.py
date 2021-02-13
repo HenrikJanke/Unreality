@@ -14,7 +14,7 @@ BreiteinBloecken = Funktionen.LaengeInBloecken(FensterBreite,FensterHoehe)
 HoeheInBloecken = Funktionen.HoeheInBloecken(FensterBreite,FensterHoehe)
 dict = WorldGenerator.Generator(Blockgroesse,FensterHoehe,FensterBreite,HoeheInBloecken,BreiteinBloecken)
 
-x,y = (randint(1,31))*Blockgroesse,Blockgroesse*4
+x,y = (randint(1,31))*Blockgroesse,-50
 Frames = 60
 
 # Speilmechanik Variablen
@@ -63,7 +63,7 @@ GS_Bruchstein = Bruchstein
 GS_Spitzhacke = GS_Laden[0]
 GS_Schwert = GS_Laden[1]
 
-
+Klick_Rate = 0
 
 Fenster = pygame.display.set_mode((FensterBreite,FensterHoehe))
 FigurIMG = pygame.image.load('Data\Spieler\Figur.png')
@@ -115,6 +115,7 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 Links_klick = True
+                Klick_Rate += 1
             # Rechtsklick
             elif event.button == 3:
                 Rechts_klick = True
@@ -132,7 +133,7 @@ while True:
                 except:
                     pass
                     
-
+    
     # Objekte als Formen umgesetzt und danach der Liste Formen hinzugefügt
     for i in dict:
         k = pygame.draw.rect(Sprunghilfe,i.Farbe,(i.xPosition,i.yPosition,Blockgroesse,Blockgroesse))
@@ -365,9 +366,6 @@ while True:
             except:
                 pass
 
-
-
-
     # Tastenanschläge bekommen Variable defenieren
     TastenAbfangen = pygame.key.get_pressed()    
     # Rechtsbewegung
@@ -380,7 +378,6 @@ while True:
         if Figur.collidelist(Formen)==-1 and Links_Behinderung == False or Rechtserlaubnis==True  :
             RechtsBewegung = True
             x+=Geschwindigkeit
-
             Sprungverbot = False
             Rechtserlaubnis = False
             Linkserlaubnis = True
