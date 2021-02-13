@@ -2,7 +2,8 @@ import pygame
 import sys
 from random import randint
 import klassen
-
+import time
+import math
 import Funktionen
 import time
 import WorldGenerator
@@ -30,8 +31,10 @@ Inventar, InventarBilder = [Schwert,Spitzhacke],[]
 RechtsBewegung = True
 Aus_Dem_Bildschirm = False
 Rechts_Behinderung, Links_Behinderung = False,False
-
-
+Erst_Kontakt = -10
+Abbau = True
+Abbaukraft_Bekommen = False
+Abbau_Pos = False
 
 
 # Grafisch/Audische Variablen
@@ -190,17 +193,55 @@ while True:
     else:
         coursor_Farbe = coursor_Farbe_Default
 
+        
 
     # Abbauen des Blockes wenn Links gedrückt und wenn Neuer_Cursor in AbbauhintergrundCheck ist
     if Neuer_Cursor.collidelist(Formen)!=-1 and AbbauHintergrundCheck.colliderect(Neuer_Cursor)==True and Links_klick == True:
-        # Herausfinden des Objektes um die Abbaukraft und die Stärke des Blockes herauszufinden sowie Später die item zugabe
+        # Uhr die die Zeit festhält, wenn was abgebaut wird
+        Erst_Kontakt = math.floor(time.time())
+        # Abbaukraft des Items, auf dem der Zeiger im inventar ist bekommen
+        try:
+            Iventar_Item_Abbaukraft = Inventar[Inv_Pointer-1].Abbaukraft
+        except:
+            Iventar_Item_Abbaukraft = 1
+        # Herausfinden wie schwer es sein soll, das Item abzubauen
         Block = dict[Neuer_Cursor.collidelist(Formen)]
-        # Ausgabe der Blockart des Objektes, stellt da das ein Objekt gelöscht wird wodurch später items für das Inventar gemacht werden können sowie die Abbaudauer
-        Inventar = Funktionen.Block_zu_Gegenstand(Block.Blockart,Inventar)
+        # Abbaustärke des abzubauenden Blockes bekommen
+        Abbau_Staerke = Block.Abbaukraft
+        # Herausfinden ob der Zeiger immernoch auf dem Block ist, während er es abbaut
+        Noch_Colidet = pygame.draw.rect(Sprunghilfe,(0,0,0),(Block.xPosition,Block.yPosition,Blockgroesse,Blockgroesse))
         # an der Stelle Block wird der Block aus der Liste entfernt, möglicher Stackunderflow
-        dict.pop(Neuer_Cursor.collidelist(Formen))
+        Abbau = False
+        Links_klick = False
+        Abbaukraft_Bekommen = False
     else:
         Links_klick = False
+    # Finaler Abbau mit Abbaukraft
+    try:
+        if Abbau_Pos == False:
+            Block = dict[Neuer_Cursor.collidelist(Formen)]
+            # Abbaustärke des abzubauenden Blockes bekommen
+            Abbau_Staerke = Block.Abbaukraft
+            Abbau_Pos = True
+            print(Abbau_Pos)
+        # Herausfinden ob der Zeiger immernoch auf dem Block ist, während er es abbaut
+        Noch_Colidet = pygame.draw.rect(Sprunghilfe,(0,0,0),(Block.xPosition,Block.yPosition,Blockgroesse,Blockgroesse))
+
+        if not Abbau_Staerke-Iventar_Item_Abbaukraft<=0 and Abbau == False and Abbaukraft_Bekommen == False:
+            Abbaudauer = Abbau_Staerke-Iventar_Item_Abbaukraft
+            Abbaukraft_Bekommen = True
+        elif Abbau == False and Abbau_Staerke-Iventar_Item_Abbaukraft<=0 and Abbaukraft_Bekommen == False:
+            Abbaudauer = 1
+            Abbaukraft_Bekommen = True
+        # Wenn die Zwei Sekunden abgelaufen sind und nicht vorher direkt abgebaut wurde, sowie der cursor noch im Item ist wird abbgebaut
+        if Erst_Kontakt+Abbaudauer == math.floor(time.time()) and Abbau==False and Noch_Colidet.colliderect(Neuer_Cursor):
+            dict.pop(Neuer_Cursor.collidelist(Formen))
+            # item zum Inventar hinzufügen
+            Inventar = Funktionen.Block_zu_Gegenstand(Block.Blockart,Inventar)
+            Abbau_Pos = False
+            Abbau = True
+    except:
+        pass
     # InventarBilder erstellen
     for i in Inventar:
         Zahl = i.Anzahl
@@ -365,7 +406,6 @@ while True:
                 Fenster.blit(Render,(X_Inv,Y_Inv))
             except:
                 pass
-
     # Tastenanschläge bekommen Variable defenieren
     TastenAbfangen = pygame.key.get_pressed()    
     # Rechtsbewegung
