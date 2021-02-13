@@ -44,7 +44,7 @@ class Materialien(Block):
         super().__init__(xPosition, yPosition, Blockart, Farbe, Abbaukraft, KannGedroptWerden, Brennbarkeit, Transparenz, Durchgehbarkeit=Durchgehbarkeit, Dropanzahl=Dropanzahl)
 
 class Erde(Materialien):
-    def __init__(self, xPosition, yPosition, Blockart='Gras', Farbe=(127,255,0), Abbaukraft=25, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
+    def __init__(self, xPosition, yPosition, Blockart='Gras', Farbe=(127,255,0), Abbaukraft=1, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
         self.xPosition = xPosition
         self.yPosition = yPosition
         self.Blockart = Blockart
@@ -80,7 +80,7 @@ class Erze(Materialien):
         super().__init__(xPosition, yPosition, Blockart, Farbe, Abbaukraft, KannGedroptWerden, Brennbarkeit, Transparenz, Durchgehbarkeit=Durchgehbarkeit, Dropanzahl=Dropanzahl)
 
 class Eisen(Erze):
-    def __init__(self, xPosition, yPosition,  Blockart='Eisen', Farbe=(138,149,151), Abbaukraft=100, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
+    def __init__(self, xPosition, yPosition,  Blockart='Eisen', Farbe=(138,149,151), Abbaukraft=8, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
         self.xPosition = xPosition
         self.yPosition = yPosition
         self.Blockart = Blockart
@@ -94,7 +94,7 @@ class Eisen(Erze):
         super().__init__(xPosition, yPosition, Blockart, Farbe, Abbaukraft, KannGedroptWerden=KannGedroptWerden, Brennbarkeit=Brennbarkeit, Transparenz=Transparenz, Durchgehbarkeit=Durchgehbarkeit, Dropanzahl=Dropanzahl)
 
 class Gold(Erze):
-    def __init__(self, xPosition, yPosition,  Blockart='Gold', Farbe=(255,215,0), Abbaukraft=125, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
+    def __init__(self, xPosition, yPosition,  Blockart='Gold', Farbe=(255,215,0), Abbaukraft=16, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
         self.xPosition = xPosition
         self.yPosition = yPosition
         self.Blockart = Blockart
@@ -108,7 +108,7 @@ class Gold(Erze):
         super().__init__(xPosition, yPosition, Blockart, Farbe, Abbaukraft, KannGedroptWerden=KannGedroptWerden, Brennbarkeit=Brennbarkeit, Transparenz=Transparenz, Durchgehbarkeit=Durchgehbarkeit, Dropanzahl=Dropanzahl)
 
 class Diamant(Erze):
-    def __init__(self, xPosition, yPosition, Blockart='Diamant', Farbe=(112,209,244), Abbaukraft=175, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
+    def __init__(self, xPosition, yPosition, Blockart='Diamant', Farbe=(112,209,244), Abbaukraft=17, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
         self.xPosition = xPosition
         self.yPosition = yPosition
         self.Blockart = Blockart
@@ -136,7 +136,7 @@ class Holz(Block):
         super().__init__(xPosition, yPosition, Blockart, Farbe, Abbaukraft, KannGedroptWerden, Brennbarkeit, Transparenz, Durchgehbarkeit=Durchgehbarkeit, Dropanzahl=Dropanzahl)
 
 class Eiche(Holz):
-    def __init__(self, xPosition, yPosition, Blockart='Eiche', Farbe=(139,69,19), Abbaukraft=50, KannGedroptWerden=True, Brennbarkeit=True, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
+    def __init__(self, xPosition, yPosition, Blockart='Eiche', Farbe=(139,69,19), Abbaukraft=2, KannGedroptWerden=True, Brennbarkeit=True, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
         self.xPosition = xPosition
         self.yPosition = yPosition
         self.Blockart = Blockart
@@ -150,7 +150,7 @@ class Eiche(Holz):
         super().__init__(xPosition, yPosition, Blockart, Farbe, Abbaukraft, KannGedroptWerden, Brennbarkeit, Transparenz, Durchgehbarkeit=Durchgehbarkeit, Dropanzahl=Dropanzahl)
 
 class Birke(Holz):
-    def __init__(self, xPosition, yPosition, Blockart='Birke', Farbe=(238,180,180), Abbaukraft=50, KannGedroptWerden=True, Brennbarkeit=True, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
+    def __init__(self, xPosition, yPosition, Blockart='Birke', Farbe=(238,180,180), Abbaukraft=2, KannGedroptWerden=True, Brennbarkeit=True, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
         self.xPosition = xPosition
         self.yPosition = yPosition
         self.Blockart = Blockart
@@ -178,7 +178,7 @@ class Stein(Materialien):
         super().__init__(xPosition, yPosition, Blockart, Farbe, Abbaukraft, KannGedroptWerden, Brennbarkeit, Transparenz, Durchgehbarkeit=Durchgehbarkeit, Dropanzahl=Dropanzahl)
 
 class Bruchstein(Stein):
-    def __init__(self, xPosition, yPosition, Blockart='Bruchstein', Farbe=(122,122,122), Abbaukraft=75, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
+    def __init__(self, xPosition, yPosition, Blockart='Bruchstein', Farbe=(122,122,122), Abbaukraft=3, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
         self.xPosition = xPosition
         self.yPosition = yPosition
         self.Blockart = Blockart
@@ -192,7 +192,7 @@ class Bruchstein(Stein):
         super().__init__(xPosition, yPosition,  Blockart, Farbe, Abbaukraft, KannGedroptWerden, Brennbarkeit, Transparenz, Durchgehbarkeit=Durchgehbarkeit, Dropanzahl=Dropanzahl)
 
 class ReinerStein(Stein):
-    def __init__(self, xPosition, yPosition, Blockart='ReinerStein', Farbe=(181,181,181), Abbaukraft=75, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
+    def __init__(self, xPosition, yPosition, Blockart='ReinerStein', Farbe=(181,181,181), Abbaukraft=3, KannGedroptWerden=True, Brennbarkeit=False, Transparenz=0, Durchgehbarkeit=False, Dropanzahl=0):
         self.xPosition = xPosition
         self.yPosition = yPosition
         self.Blockart = Blockart
@@ -222,7 +222,7 @@ class Lava(Block):
         super().__init__(xPosition, yPosition,  Blockart, Farbe, Abbaukraft, KannGedroptWerden, Brennbarkeit, Transparenz, Durchgehbarkeit=Durchgehbarkeit, Dropanzahl=Dropanzahl)
 
 class Blaetter(Block):
-    def __init__(self, xPosition, yPosition, Blockart='Blaetter', Farbe=(99,219,86), Abbaukraft=25, KannGedroptWerden=False, Brennbarkeit=True, Transparenz=30, Durchgehbarkeit=False, Dropanzahl=0):
+    def __init__(self, xPosition, yPosition, Blockart='Blaetter', Farbe=(99,219,86), Abbaukraft=0, KannGedroptWerden=False, Brennbarkeit=True, Transparenz=30, Durchgehbarkeit=False, Dropanzahl=0):
         self.xPosition = xPosition
         self.yPosition = yPosition
         self.Blockart = Blockart
