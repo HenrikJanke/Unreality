@@ -415,3 +415,13 @@ class Spitzhacke(Werkzeuge):
         self.KannKapputtGehen = KannKapputtGehen
         self.VerbrauchDauer = VerbrauchDauer
         super().__init__(Abbaukraft, Schadenswert, Gegenstandsart, Anzahl, KannKapputtGehen, VerbrauchDauer, StackgroesseMax=StackgroesseMax)
+
+class Regen():    
+    # Konstruktor
+    def __init__(self,fenster_breite,fenster_hoehe):
+        self.fenster_breite = fenster_breite
+        self.fenster_hoehe = fenster_hoehe
+        self.xPosition = randint(0,fenster_breite)
+        self.yPosition = 0
+
+
