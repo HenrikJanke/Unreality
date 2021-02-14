@@ -119,11 +119,14 @@ Lautstaerke = pygame.mixer.music.get_volume()
 if Lautstaerke >= 0.95:
     pygame.mixer.music.set_volume(Lautstaerke-0.96)
 
+Regen = []
+tropfen_anzahl = 0
+
 while True:
     # Formen und Inventarr auf der Karte zurücksetzen
     Formen =[]
     InventarBilder = []
-    
+
     # Inventar mit den Mausrad durchgehen
     if Inv_Pointer < 1:
         Inv_Pointer = 6
@@ -136,6 +139,25 @@ while True:
     #Schwarzer Hintergrund und das Hintergrundbild sowie die Hilfsstruktur
     Fenster.fill((0,0,0))
     Fenster.blit(Hintergrund,(0,0))
+
+    # Regen Im Hintergrund
+    Verlangsamer = round(time.time())
+    #Verlangsamer.round(1)
+    for i in range (0,randint(1,2)):
+        if Verlangsamer % randint(1,3) == 0 and not tropfen_anzahl>=1500:
+            Regen.append(klassen.Regen(FensterBreite,FensterHoehe))
+    tropfen_anzahl = 0
+    pop_zaehler = 0
+    for i in Regen:
+        if i.yPosition >= FensterHoehe:
+            Regen.pop(pop_zaehler)
+        pop_zaehler +=1
+        i.yPosition += 2
+    for i in Regen:
+        pygame.draw.rect(Fenster,(255,255,255),(i.xPosition,i.yPosition,int(Blockgroesse/16),int(Blockgroesse/16)))
+        tropfen_anzahl +=1
+
+
     for event in pygame.event.get():
         # Schließen initialisieren  
         if event.type == pygame.QUIT: sys.exit()
@@ -247,7 +269,6 @@ while True:
             # Abbaustärke des abzubauenden Blockes bekommen
             Abbau_Staerke = Block.Abbaukraft
             Abbau_Pos = True
-            print(Abbau_Pos)
         # Herausfinden ob der Zeiger immernoch auf dem Block ist, während er es abbaut
         Noch_Colidet = pygame.draw.rect(Sprunghilfe,(0,0,0),(Block.xPosition,Block.yPosition,Blockgroesse,Blockgroesse))
         
@@ -261,7 +282,6 @@ while True:
         # Abbauanimation
         if (Erst_Kontakt+Abbaudauer-math.floor(time.time()))>=-1 and Noch_Colidet.colliderect(Neuer_Cursor):
             Hilfe = Erst_Kontakt+Abbaudauer-math.floor(time.time())
-            print(Block.xPosition,Block.yPosition)
             if Hilfe >= 9:
                 Hilfe = 9
             Fenster.blit(Abbau_Animation[Hilfe],(Block.xPosition,Block.yPosition))
@@ -343,7 +363,6 @@ while True:
             Oben = pygame.draw.rect(Sprunghilfe,(0,0,0),(MausX,(MausY-Blockgroesse),Blockgroesse,Blockgroesse))
             Unten = pygame.draw.rect(Sprunghilfe,(0,0,0),(MausX,MausY+Blockgroesse,Blockgroesse,Blockgroesse))
             if Links.collidelist(Formen)!=-1 or Rechts.collidelist(Formen)!=-1 or Oben.collidelist(Formen)!=-1 or Unten.collidelist(Formen)!=-1:
-                print("Ja")
                 Nicht_in_Luft = True
             else:
                 Nicht_in_Luft = False
@@ -373,7 +392,6 @@ while True:
                     Neuer_Block = klassen.Bruchstein(MausX,MausY)
                 dict.append(Neuer_Block)
                 
-                print(Gegenstand.Anzahl)
             else:
                 Rechts_klick = False
         except:

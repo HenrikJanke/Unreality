@@ -73,7 +73,6 @@ def Block_zu_Gegenstand (Blockart,Item_Liste):
     if not Item_Liste==[]:
         for i in Item_Liste:
             if i.Gegenstandsart == Blockart:
-                print("Bestehendes Item:", Blockart)
                 # Wenn das Item schon im Inventar ist einen hinzufügen
                 Item_Liste[z].AnzahlCheck()
                 if not Item_Liste[z].Anzahl == Item_Liste[z].StackgroesseMax:
