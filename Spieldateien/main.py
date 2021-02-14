@@ -66,6 +66,31 @@ GS_Bruchstein = Bruchstein
 GS_Spitzhacke = GS_Laden[0]
 GS_Schwert = GS_Laden[1]
 
+# Alle Abbaustadien laden 
+Abbau_Null = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_9.png")
+Abbau_Null = pygame.transform.scale(Abbau_Null,(Blockgroesse,Blockgroesse))
+Abbau_Eins = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_8.png")
+Abbau_Eins = pygame.transform.scale(Abbau_Eins,(Blockgroesse,Blockgroesse))
+Abbau_Zwei = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_7.png")
+Abbau_Zwei = pygame.transform.scale(Abbau_Zwei,(Blockgroesse,Blockgroesse))
+Abbau_Drei = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_6.png")
+Abbau_Drei = pygame.transform.scale(Abbau_Drei,(Blockgroesse,Blockgroesse))
+Abbau_Vier = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_5.png")
+Abbau_Vier = pygame.transform.scale(Abbau_Vier,(Blockgroesse,Blockgroesse))
+Abbau_Fuenf = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_4.png")
+Abbau_Fuenf = pygame.transform.scale(Abbau_Fuenf,(Blockgroesse,Blockgroesse))
+Abbau_Sechs = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_3.png")
+Abbau_Sechs = pygame.transform.scale(Abbau_Sechs,(Blockgroesse,Blockgroesse))
+Abbau_Sieben = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_2.png")
+Abbau_Sieben = pygame.transform.scale(Abbau_Sieben,(Blockgroesse,Blockgroesse))
+Abbau_Acht = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_1.png")
+Abbau_Acht = pygame.transform.scale(Abbau_Acht,(Blockgroesse,Blockgroesse))
+Abbau_Neun = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_0.png")
+Abbau_Neun = pygame.transform.scale(Abbau_Neun,(Blockgroesse,Blockgroesse))
+Abbau_Animation = [Abbau_Null,Abbau_Eins,Abbau_Zwei,Abbau_Drei,Abbau_Vier,Abbau_Fuenf,Abbau_Sechs,Abbau_Sieben,Abbau_Acht,Abbau_Neun]
+
+
+
 Klick_Rate = 0
 
 Fenster = pygame.display.set_mode((FensterBreite,FensterHoehe))
@@ -111,7 +136,6 @@ while True:
     #Schwarzer Hintergrund und das Hintergrundbild sowie die Hilfsstruktur
     Fenster.fill((0,0,0))
     Fenster.blit(Hintergrund,(0,0))
-
     for event in pygame.event.get():
         # Schließen initialisieren  
         if event.type == pygame.QUIT: sys.exit()
@@ -226,13 +250,22 @@ while True:
             print(Abbau_Pos)
         # Herausfinden ob der Zeiger immernoch auf dem Block ist, während er es abbaut
         Noch_Colidet = pygame.draw.rect(Sprunghilfe,(0,0,0),(Block.xPosition,Block.yPosition,Blockgroesse,Blockgroesse))
-
+        
         if not Abbau_Staerke-Iventar_Item_Abbaukraft<=0 and Abbau == False and Abbaukraft_Bekommen == False:
             Abbaudauer = Abbau_Staerke-Iventar_Item_Abbaukraft
             Abbaukraft_Bekommen = True
         elif Abbau == False and Abbau_Staerke-Iventar_Item_Abbaukraft<=0 and Abbaukraft_Bekommen == False:
             Abbaudauer = 1
             Abbaukraft_Bekommen = True
+
+        # Abbauanimation
+        if (Erst_Kontakt+Abbaudauer-math.floor(time.time()))>=-1 and Noch_Colidet.colliderect(Neuer_Cursor):
+            Hilfe = Erst_Kontakt+Abbaudauer-math.floor(time.time())
+            print(Block.xPosition,Block.yPosition)
+            if Hilfe >= 9:
+                Hilfe = 9
+            Fenster.blit(Abbau_Animation[Hilfe],(Block.xPosition,Block.yPosition))
+
         # Wenn die Zwei Sekunden abgelaufen sind und nicht vorher direkt abgebaut wurde, sowie der cursor noch im Item ist wird abbgebaut
         if Erst_Kontakt+Abbaudauer == math.floor(time.time()) and Abbau==False and Noch_Colidet.colliderect(Neuer_Cursor):
             dict.pop(Neuer_Cursor.collidelist(Formen))
@@ -242,7 +275,7 @@ while True:
             Abbau = True
     except:
         pass
-    # InventarBilder erstellen
+    
     for i in Inventar:
         Zahl = i.Anzahl
         i = i.Gegenstandsart
