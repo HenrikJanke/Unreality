@@ -1,7 +1,9 @@
 from random import randint
 import pygame
+import klassen as k
 import klassen
 import random
+import sys
 pygame.font.init()
 
 
@@ -150,3 +152,231 @@ def Item_Am_Koerper(Bild,Rechts,Blockgroesse,X_Pos_Block,Y_Pos_Block,Beruehren,D
 
 
     return Bild,x,y
+
+def Startsequenz(Fenster,button_farbe_normal,schrift_farbe_normal,start_button_breite,start_button_hoehe,FensterBreite,FensterHoehe,Versteckter_monitor,maus_x,maus_y,Links_klick,Blockgroesse):
+    # Wichtige Variablen und Einstellungen einstellen
+    Formen_lokal = []
+    dict_lokal = []
+    Grafiken = BilderLaden(Blockgroesse)
+    Gras = Grafiken[1]
+    Eisen = Grafiken[2]
+    Gold = Grafiken[3]
+    Diamant = Grafiken[4]
+    font_Start = pygame.font.SysFont('Arial', 40)
+    font_unreality = pygame.font.SysFont('Arial', 120)
+    Phantom_fenster = pygame.draw.rect(Versteckter_monitor,(button_farbe_normal),(FensterBreite/2-int(start_button_breite/2),FensterHoehe/2+start_button_hoehe,start_button_breite,start_button_hoehe))
+    Mauszeiger = pygame.draw.rect(Versteckter_monitor,(0,0,0),(maus_x,maus_y,10,10))
+    
+
+    # Invertierte Farbe
+    Font_farbe_kopie = schrift_farbe_normal
+    button_farbe_kopie = button_farbe_normal
+    if Mauszeiger.colliderect(Phantom_fenster):
+        schrift_farbe_normal = button_farbe_normal
+        button_farbe_normal = Font_farbe_kopie
+    else:
+        schrift_farbe_normal = Font_farbe_kopie
+        button_farbe_normal = button_farbe_kopie
+    # Darstellen der Gegenstände
+    Start_rect = pygame.draw.rect(Fenster,(button_farbe_normal),(FensterBreite/2-int(start_button_breite/2),FensterHoehe/2+start_button_hoehe,start_button_breite,start_button_hoehe))
+    start_schrift = font_Start.render("START",True,(schrift_farbe_normal))
+    Unreality_schrift = font_unreality.render("UNREALITY",True,(button_farbe_kopie))
+    Fenster.blit(start_schrift,(FensterBreite/2-int(start_button_breite/2)+35,FensterHoehe/2+start_button_hoehe))
+    Fenster.blit(Unreality_schrift,(200,180))
+
+    # Ausschmückungen an den Rändern erstellen
+    # UntenLinks
+    for i in range(1,5):
+        r1_y= FensterHoehe
+        if i == 1:
+            r1_x = 0
+            r2_x = Blockgroesse
+            r3_x = r2_x+Blockgroesse
+            r4_x = r2_x+Blockgroesse*2
+        if i == 2:
+            r1_x = FensterBreite-Blockgroesse
+            r2_x = FensterBreite-Blockgroesse*2
+            r3_x = FensterBreite-Blockgroesse*3
+            r4_x = FensterBreite-Blockgroesse*4
+        if i == 3:
+            r1_y = 0
+            r1_x = 0
+            r2_x = Blockgroesse
+            r3_x = r2_x+Blockgroesse
+            r4_x = r2_x+Blockgroesse*2
+        if i == 4:
+            r1_y = 0
+            r1_x = FensterBreite-Blockgroesse
+            r2_x = FensterBreite-Blockgroesse*2
+            r3_x = FensterBreite-Blockgroesse*3
+            r4_x = FensterBreite-Blockgroesse*4
+        if i in [1,2]:
+            dict_lokal.append(k.Diamant(r1_x,r1_y-Blockgroesse))
+            dict_lokal.append(k.Gold(r1_x,r1_y-Blockgroesse*2))
+            dict_lokal.append(k.Eisen(r1_x,r1_y-Blockgroesse*3))
+            dict_lokal.append(k.Erde(r1_x,r1_y-Blockgroesse*4))
+            dict_lokal.append(k.Eisen(r2_x,r1_y-Blockgroesse))
+            dict_lokal.append(k.Diamant(r2_x,r1_y-Blockgroesse*2))
+            dict_lokal.append(k.Erde(r2_x,r1_y-Blockgroesse*3))
+            dict_lokal.append(k.Gold(r3_x,r1_y-Blockgroesse))
+            dict_lokal.append(k.Erde(r3_x,r1_y-Blockgroesse*2))
+            dict_lokal.append(k.Erde(r4_x,r1_y-Blockgroesse))
+        elif i in [3,4]:
+            dict_lokal.append(k.Diamant(r1_x,r1_y))
+            dict_lokal.append(k.Gold(r1_x,r1_y+Blockgroesse*1))
+            dict_lokal.append(k.Eisen(r1_x,r1_y+Blockgroesse*2))
+            dict_lokal.append(k.Erde(r1_x,r1_y+Blockgroesse*3))
+            dict_lokal.append(k.Eisen(r2_x,r1_y))
+            dict_lokal.append(k.Diamant(r2_x,r1_y+Blockgroesse*1))
+            dict_lokal.append(k.Erde(r2_x,r1_y+Blockgroesse*2))
+            dict_lokal.append(k.Gold(r3_x,r1_y))
+            dict_lokal.append(k.Erde(r3_x,r1_y+Blockgroesse*1))
+            dict_lokal.append(k.Erde(r4_x,r1_y))
+    # Ausschmückungen an den Rändern in Bilder umformen
+    for i in dict_lokal:
+        # Blöcke pro Durchgang hinzufügen
+        Formen_lokal.append(i)   
+        # Grafik der Blockart an den Punkt hinzufügen
+        if i.Blockart == 'Gras':
+            Fenster.blit(Gras,(i.xPosition,i.yPosition))
+        elif i.Blockart == 'Eisen':
+            Fenster.blit(Eisen,(i.xPosition,i.yPosition))
+        elif i.Blockart == 'Gold':
+            Fenster.blit(Gold,(i.xPosition,i.yPosition))
+        elif i.Blockart == 'Diamant':
+            Fenster.blit(Diamant,(i.xPosition,i.yPosition))
+    
+    # Abbruchkriterium um Ins Hauptspiel zu kommen
+    if Mauszeiger.colliderect(Phantom_fenster) and Links_klick == True:
+        return 1
+    else:
+        return 0
+
+def Esape_menu(Fenster,maus_x,maus_y,Verstecktes_fenster,schrift_rot,schrift_weiß,Links_klick,Regen_an, Regen_Geschwindigkeit, Musik_an,FensterBreite,FensterHoehe,Blockgroesse,Auswahl):
+    schrift_rot_kopie = schrift_rot
+    schrift_weiß_kopie = schrift_weiß
+    Formen_lokal = []
+    dict_lokal = []
+    Grafiken = BilderLaden(Blockgroesse)
+    Gras = Grafiken[1]
+    Eisen = Grafiken[2]
+    Gold = Grafiken[3]
+    Diamant = Grafiken[4]
+
+    Spielsequenz = 2
+    for event in pygame.event.get():
+        # Schließen initialisieren  
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                Links_klick = True
+            else:
+                Links_klick = False
+
+
+    Mauszeiger = pygame.draw.rect(Verstecktes_fenster,(0,0,0),(maus_x,maus_y,10,10))
+    Font = pygame.font.SysFont('Arial', 32)
+
+    # Escape Fenster
+    Escape_Fenster = pygame.draw.rect(Fenster,schrift_weiß,(20,20,160,40))
+    Escape_Schrift = Font.render("ZURÜCK",True,(schrift_rot))
+    if Mauszeiger.colliderect(Escape_Fenster):
+        Escape_Fenster = pygame.draw.rect(Fenster,schrift_rot,(20,20,160,40))
+        Escape_Schrift = Font.render("ZURÜCK",True,(schrift_weiß))
+    Fenster.blit(Escape_Schrift,(30,23))
+    # Übergabe des Klickens
+    if Mauszeiger.colliderect(Escape_Fenster) and Links_klick == True:
+        Spielsequenz = 1
+
+    # Regen Ausschalten
+    Regen_aus = pygame.draw.rect(Fenster,schrift_weiß,(200,200,220,40))
+    Regen_aus_Schrift = Font.render("Regen ist an",True,(schrift_rot))
+    if Regen_an == False:
+        Regen_aus = pygame.draw.rect(Fenster,schrift_rot,(200,200,220,40))
+        Regen_aus_Schrift = Font.render("Regen ist aus",True,(schrift_weiß))
+    Fenster.blit(Regen_aus_Schrift,(210,200))
+    if Mauszeiger.colliderect(Regen_aus) and Links_klick == True:
+        if Regen_an == True:
+            Regen_an = False
+        else:
+            Regen_an = True
+        
+    # Musik Ausschalten
+    Musik_aus = pygame.draw.rect(Fenster,schrift_weiß,(600,200,220,40))
+    Musik_aus_Schrift = Font.render("Musik ist an",True,(schrift_rot))
+    if Musik_an == False:
+        Musik_aus = pygame.draw.rect(Fenster,schrift_rot,(600,200,220,40))
+        Musik_aus_Schrift = Font.render("Musik ist aus",True,(schrift_weiß))
+    Fenster.blit(Musik_aus_Schrift,(620,200))
+    if Mauszeiger.colliderect(Musik_aus) and Links_klick == True:
+        if Musik_an == True:
+            Musik_an = False
+        else:
+            Musik_an = True
+
+    # Exit
+    Exit = pygame.draw.rect(Fenster,schrift_weiß,(450,400,100,40))
+    Exit_Schrift = Font.render("EXIT",True,(schrift_rot))
+    if Mauszeiger.colliderect(Exit):
+        Exit = pygame.draw.rect(Fenster,schrift_rot,(450,400,100,40))
+        Exit_Schrift = Font.render("EXIT",True,schrift_weiß)
+    Fenster.blit(Exit_Schrift,(465,400))
+    if Mauszeiger.colliderect(Exit) and Links_klick == True:
+        sys.exit()
+    
+    # Blöcke an der Seite
+    for i in range(1,5):
+        r1_y= FensterHoehe
+        if i == 1:
+            r1_x = 0
+            r2_x = Blockgroesse
+            r3_x = r2_x+Blockgroesse
+            r4_x = r2_x+Blockgroesse*2
+        if i == 2:
+            r1_x = FensterBreite-Blockgroesse
+            r2_x = FensterBreite-Blockgroesse*2
+            r3_x = FensterBreite-Blockgroesse*3
+            r4_x = FensterBreite-Blockgroesse*4
+        if i == 4:
+            r1_y = 0
+            r1_x = FensterBreite-Blockgroesse
+            r2_x = FensterBreite-Blockgroesse*2
+            r3_x = FensterBreite-Blockgroesse*3
+            r4_x = FensterBreite-Blockgroesse*4
+        if i in [1,2]:
+            dict_lokal.append(k.Diamant(r1_x,r1_y-Blockgroesse))
+            dict_lokal.append(k.Gold(r1_x,r1_y-Blockgroesse*2))
+            dict_lokal.append(k.Eisen(r1_x,r1_y-Blockgroesse*3))
+            dict_lokal.append(k.Erde(r1_x,r1_y-Blockgroesse*4))
+            dict_lokal.append(k.Eisen(r2_x,r1_y-Blockgroesse))
+            dict_lokal.append(k.Diamant(r2_x,r1_y-Blockgroesse*2))
+            dict_lokal.append(k.Erde(r2_x,r1_y-Blockgroesse*3))
+            dict_lokal.append(k.Gold(r3_x,r1_y-Blockgroesse))
+            dict_lokal.append(k.Erde(r3_x,r1_y-Blockgroesse*2))
+            dict_lokal.append(k.Erde(r4_x,r1_y-Blockgroesse))
+        elif i == 4:
+            dict_lokal.append(k.Diamant(r1_x,r1_y))
+            dict_lokal.append(k.Gold(r1_x,r1_y+Blockgroesse*1))
+            dict_lokal.append(k.Eisen(r1_x,r1_y+Blockgroesse*2))
+            dict_lokal.append(k.Erde(r1_x,r1_y+Blockgroesse*3))
+            dict_lokal.append(k.Eisen(r2_x,r1_y))
+            dict_lokal.append(k.Diamant(r2_x,r1_y+Blockgroesse*1))
+            dict_lokal.append(k.Erde(r2_x,r1_y+Blockgroesse*2))
+            dict_lokal.append(k.Gold(r3_x,r1_y))
+            dict_lokal.append(k.Erde(r3_x,r1_y+Blockgroesse*1))
+            dict_lokal.append(k.Erde(r4_x,r1_y))
+    # Ausschmückungen an den Rändern in Bilder umformen
+    for i in dict_lokal:
+        # Blöcke pro Durchgang hinzufügen
+        Formen_lokal.append(i)   
+        # Grafik der Blockart an den Punkt hinzufügen
+        if i.Blockart == 'Gras':
+            Fenster.blit(Gras,(i.xPosition,i.yPosition))
+        elif i.Blockart == 'Eisen':
+            Fenster.blit(Eisen,(i.xPosition,i.yPosition))
+        elif i.Blockart == 'Gold':
+            Fenster.blit(Gold,(i.xPosition,i.yPosition))
+        elif i.Blockart == 'Diamant':
+            Fenster.blit(Diamant,(i.xPosition,i.yPosition))
+
+    return Spielsequenz, Regen_an, Regen_Geschwindigkeit, Musik_an,Auswahl
+  
