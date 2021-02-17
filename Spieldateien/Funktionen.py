@@ -262,15 +262,8 @@ def Esape_menu(Fenster,maus_x,maus_y,Verstecktes_fenster,schrift_rot,schrift_wei
     Eisen = Grafiken[2]
     Gold = Grafiken[3]
     Diamant = Grafiken[4]
-
     Spielsequenz = 2
-    for event in pygame.event.get():
-        # Schließen initialisieren  
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                Links_klick = True
-            else:
-                Links_klick = False
+
 
 
     Mauszeiger = pygame.draw.rect(Verstecktes_fenster,(0,0,0),(maus_x,maus_y,10,10))
