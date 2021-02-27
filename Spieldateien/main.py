@@ -14,12 +14,11 @@ Blockgroesse = Funktionen.Blockgroesse(FensterBreite,FensterHoehe)
 BreiteinBloecken = Funktionen.LaengeInBloecken(FensterBreite,FensterHoehe)
 HoeheInBloecken = Funktionen.HoeheInBloecken(FensterBreite,FensterHoehe)
 dict = WorldGenerator.Generator(Blockgroesse,FensterHoehe,FensterBreite,HoeheInBloecken,BreiteinBloecken)
-
 x,y = (randint(1,31))*Blockgroesse,-50
 Frames = 60
+Geschwindigkeit= 3
 
 # Speilmechanik Variablen
-Geschwindigkeit= 3
 Sprungintensitaet, Sprung,Sprungverbot, zaehler = -16,False,False,0
 Linkserlaubnis,Rechtserlaubnis,Obenerlaubnis = False,False,False
 Links_klick, Inv_Pointer = False,1
@@ -32,16 +31,29 @@ RechtsBewegung = True
 Aus_Dem_Bildschirm = False
 Rechts_Behinderung, Links_Behinderung = False,False
 Erst_Kontakt = -10
-Abbau = True
-Abbaukraft_Bekommen = False
-Abbau_Pos = False
+Abbau, Abbaukraft_Bekommen, Abbau_Pos  = True, False, False
+Klick_Rate = 0
+Regen,tropfen_anzahl  = [], 0
+Regen_an, Regen_Geschwindigkeit, Musik_an,Auswahl = True, 0.5, True,1
 
-
-# Grafisch/Audische Variablen
+# Pygame initialisieren
 pygame.init()
 pygame.font.init()
 
-# alle Bilder laden
+# Pygame Einstellungen zum Personalisieren des Spiels
+Fenster = pygame.display.set_mode((FensterBreite,FensterHoehe))
+FigurIMG = pygame.image.load('Data\Spieler\Figur.png')
+pygame.display.set_caption("Unreality")
+Startbild = pygame.image.load("Data\Grafiken\Icon\Icon.png")
+pygame.display.set_icon(Startbild)
+fps = pygame.time.Clock()
+Sprunghilfe = pygame.Surface((FensterBreite,FensterHoehe)) 
+Sprunghilfe.set_alpha(0)
+coursor_Farbe_Default = (0,0,0)
+coursor_Farbe = coursor_Farbe_Default
+Spielsequenz = 0
+
+# Alle Grafiken und Verschönerungen (Regen, Bilder, Inventar)
 Grafiken = Funktionen.BilderLaden(Blockgroesse)
 Erde = Grafiken[0]
 Gras = Grafiken[1]
@@ -53,7 +65,6 @@ Birke = Grafiken[6]
 Bruchstein = Grafiken[7]
 ReinerStein = Grafiken[8]
 Blaetter = Grafiken[9]
-
 # Alle Gegenstände Laden
 GS_Laden = Funktionen.GegenstaendeLaden(Blockgroesse)
 GS_Erde = Erde
@@ -65,7 +76,6 @@ GS_Birke = Birke
 GS_Bruchstein = Bruchstein
 GS_Spitzhacke = GS_Laden[0]
 GS_Schwert = GS_Laden[1]
-
 # Alle Abbaustadien laden 
 Abbau_Null = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_9.png")
 Abbau_Null = pygame.transform.scale(Abbau_Null,(Blockgroesse,Blockgroesse))
@@ -88,40 +98,27 @@ Abbau_Acht = pygame.transform.scale(Abbau_Acht,(Blockgroesse,Blockgroesse))
 Abbau_Neun = pygame.image.load("Data\Grafiken\Zerstören\destroy_stage_0.png")
 Abbau_Neun = pygame.transform.scale(Abbau_Neun,(Blockgroesse,Blockgroesse))
 Abbau_Animation = [Abbau_Null,Abbau_Eins,Abbau_Zwei,Abbau_Drei,Abbau_Vier,Abbau_Fuenf,Abbau_Sechs,Abbau_Sieben,Abbau_Acht,Abbau_Neun]
-
-
-
-Klick_Rate = 0
-
-Fenster = pygame.display.set_mode((FensterBreite,FensterHoehe))
-FigurIMG = pygame.image.load('Data\Spieler\Figur.png')
-pygame.display.set_caption("Unreality")
-Startbild = pygame.image.load("Data\Grafiken\Icon\Icon.png")
-pygame.display.set_icon(Startbild)
-fps = pygame.time.Clock()
+# Hintergrund Bild und Overlay
 Hintergrund = pygame.image.load("Data\Grafiken\Hintergrund\Hintergrund.png")
 GuiOverlay = pygame.image.load("Data\Grafiken\Gui\Overlay\Overlay.png")
 GuiOverlay = pygame.transform.scale(GuiOverlay,(Blockgroesse*12,Blockgroesse*2))
 Hover = pygame.image.load("Data\Grafiken\Gui\Overlay\Hover.png")
 Hover = pygame.transform.scale(Hover,(Blockgroesse*2,Blockgroesse*2))
-Sprunghilfe = pygame.Surface((FensterBreite,FensterHoehe)) 
-Sprunghilfe.set_alpha(0)
-coursor_Farbe_Default = (0,0,0)
-coursor_Farbe = coursor_Farbe_Default
 # Hintergrund Musik
 pygame.mixer.init()
 pygame.mixer.music.load("Data\Musik\Sound of Rain.mp3")
-Musik = False
-Musik_pausiert = False
-Regen = []
-tropfen_anzahl = 0
-Regen_an, Regen_Geschwindigkeit, Musik_an,Auswahl = True, 0.5, True,1
-Spielsequenz = 0
+Musik, Musik_pausiert = False, False
+
+
+
+
+
 
 while True:
-     # Formen und Inventarr auf der Karte zurücksetzen
+     # Formen und Inventar auf der Karte zurücksetzen
     Formen =[]
     InventarBilder = []
+    # Mauspositionen bekommen, um später damit zu Arbeiten
     m_x, m_y =  pygame.mouse.get_pos()
     for event in pygame.event.get():
         # Schließen initialisieren  
@@ -138,7 +135,7 @@ while True:
                 Inv_Pointer -= 1
             elif event.button == 4:
                 Inv_Pointer += 1
-        # Wenn Taste I gedrückt dann das Inventar öffnen
+        # Wenn Taste Gedrückt
         if event.type == pygame.KEYDOWN:
             # Wegwerfen von Items Taste Q
             if event.key == pygame.K_q:
@@ -147,6 +144,7 @@ while True:
                 except:
                     pass
             if event.key == pygame.K_ESCAPE:
+                # In den Einstellungs Modus kommen
                 if Spielsequenz == 1:
                     Spielsequenz = 2
     # Start Bildschirm
@@ -160,27 +158,35 @@ while True:
         Spielsequenz = Funktionen.Startsequenz(Fenster,button_farbe_normal,schrift_farbe_normal,start_button_breite,start_button_hoehe,FensterBreite,FensterHoehe,Sprunghilfe,m_x,m_y,Links_klick,Blockgroesse)
         Links_klick = False
     
+    # Einstellungen Modus
     elif Spielsequenz == 2:
+        # Musik Pausieren wenn es im Escape Modus ist
         pygame.mixer.music.pause()
         Musik_pausiert = True
         Escape_Hintergrund = pygame.Surface((FensterBreite,FensterHoehe))
         Escape_Hintergrund.blit(Hintergrund,(0,0))
+        # Mauszeiger wieder darstellen
         pygame.mouse.set_visible(True)
         Spielsequenz, Regen_an, Regen_Geschwindigkeit, Musik_an,Auswahl = Funktionen.Esape_menu(Escape_Hintergrund,m_x,m_y,Sprunghilfe,(144,55,73),(255,255,255),Links_klick,Regen_an, Regen_Geschwindigkeit, Musik_an,FensterBreite,FensterHoehe,Blockgroesse,Auswahl)
         Links_klick = False
+        # Fenster mit den Aktuellen Escape Hintergrund updaten
         Fenster.blit(Escape_Hintergrund,(0,0))
 
 
     elif Spielsequenz == 1:
+        # Wenn Musik nicht an ist aber an sein soll wird es angestellt
         if Musik == False and not Musik_an == False:
             pygame.mixer.music.play()
             Lautstaerke = pygame.mixer.music.get_volume()
             if Lautstaerke >= 0.95:
                 pygame.mixer.music.set_volume(Lautstaerke-0.96)
             Musik = True
+        # Musiker wird wieder angemacht, wenn es an sein soll
         if Musik_pausiert == True and not Musik_an == False:
             pygame.mixer.music.unpause()
             Musik_pausiert = False
+        
+        # Mauszeiger ausschalten, da Später ein eigener erstellt wird
         pygame.mouse.set_visible(False)
 
         # Inventar mit den Mausrad durchgehen
@@ -190,12 +196,13 @@ while True:
             Inv_Pointer = 1
 
         # Spieler Objekt erzeugen  
-        Spieler = klassen.Spieler(1,'Ben',2,100,int(x),int(y-(Blockgroesse*2)),Blockgroesse-4,Blockgroesse*3,'Nichts',0,'Nichts',0,'Nichts',0,'Nichts',0,'Nichts',0,'Nichts',0,Inv_Pointer)
+        Spieler = klassen.Spieler(1,'Ben',2,100,int(x),int(y-(Blockgroesse*2)),Blockgroesse-4,Blockgroesse*3,Inv_Pointer)
 
         #Schwarzer Hintergrund und das Hintergrundbild sowie die Hilfsstruktur
         Fenster.fill((0,0,0))
         Fenster.blit(Hintergrund,(0,0))
 
+        # Regen erstellen und Regen entfernen, wenn es Aus dem Bildschirm ist
         if Regen_an == True:
             # Regen Im Hintergrund
             Verlangsamer = round(time.time())
@@ -215,7 +222,7 @@ while True:
                 tropfen_anzahl +=1
                         
         
-        # Objekte als Formen umgesetzt und danach der Liste Formen hinzugefügt
+        # Objekte als Formen umsetzen und danach der Liste Formen hinzugefügt
         for i in dict:
             k = pygame.draw.rect(Sprunghilfe,i.Farbe,(i.xPosition,i.yPosition,Blockgroesse,Blockgroesse))
             # Blöcke pro Durchgang hinzufügen
@@ -256,15 +263,15 @@ while True:
         #UntencheckFigur das es nicht durch einen Block durchfällt
         UntenCheckFigur = pygame.draw.rect(Sprunghilfe,(0,0,0),(int(Spieler.x)+Blockgroesse/2,y+Blockgroesse-(Blockgroesse/10),1,Blockgroesse/10))
 
-    # Mausposition
+        # Mausposition
         MausX, MausY = pygame.mouse.get_pos()
         #AbbauHintergrundCheck ob es in der Möglichen umkreis ist wo es abgebaut werden kann
         AbbauHintergrundCheck = pygame.draw.rect(Sprunghilfe,(255,200,0),(Spieler.x-Blockgroesse*2,Spieler.y-Blockgroesse,Blockgroesse*5,Blockgroesse*4.85))
         # Individueller Mauszeiger
-        Verrtikal = pygame.draw.rect(Fenster,(coursor_Farbe),(MausX-1,MausY-7,2,14))
-        Horizontal = pygame.draw.rect(Fenster,(coursor_Farbe),(MausX-7,MausY-1,14,2))
+        Verrtikal = pygame.draw.rect(Fenster,(coursor_Farbe),(m_x-1,m_y-7,2,14))
+        Horizontal = pygame.draw.rect(Fenster,(coursor_Farbe),(m_x-7,m_y-1,14,2))
         # Wird Benutzt, da ein Fehler auftritt wenn das Fadenkreuz genutzt wird
-        Neuer_Cursor = pygame.draw.rect(Sprunghilfe,(coursor_Farbe),(MausX-1,MausY-1,2,2))
+        Neuer_Cursor = pygame.draw.rect(Sprunghilfe,(coursor_Farbe),(m_x-1,m_y-1,2,2))
         #Farbe des coursors ändern wenn es in einen möglichen Block ist der abgebaut werden kann
         if AbbauHintergrundCheck.colliderect(Neuer_Cursor):
             coursor_Farbe = (255,0,0)
@@ -328,6 +335,7 @@ while True:
         except:
             pass
         
+        # Bilder hinzufügen, von den Gegenständen die im Inventar sind
         for i in Inventar:
             Zahl = i.Anzahl
             i = i.Gegenstandsart
