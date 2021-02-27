@@ -207,20 +207,6 @@ class ReinerStein(Stein):
 
 
 
-class Lava(Block):
-    def __init__(self, xPosition, yPosition, Blockart='Lava', Farbe=(171,37,36), Abbaukraft=-30, KannGedroptWerden=False, Brennbarkeit=True, Transparenz=50, Durchgehbarkeit=False, Dropanzahl=0):
-        self.xPosition = xPosition
-        self.yPosition = yPosition
-        self.Blockart = Blockart
-        self.Farbe = Farbe
-        self.Abbaukraft = Abbaukraft
-        self.KannGedroptWerden = KannGedroptWerden
-        self.Brennbarkeit = Brennbarkeit
-        self.Transparenz = Transparenz
-        self.Durchgehbarkeit = Durchgehbarkeit
-        self.Dropanzahl = Dropanzahl
-        super().__init__(xPosition, yPosition,  Blockart, Farbe, Abbaukraft, KannGedroptWerden, Brennbarkeit, Transparenz, Durchgehbarkeit=Durchgehbarkeit, Dropanzahl=Dropanzahl)
-
 class Blaetter(Block):
     def __init__(self, xPosition, yPosition, Blockart='Blaetter', Farbe=(99,219,86), Abbaukraft=0, KannGedroptWerden=False, Brennbarkeit=True, Transparenz=30, Durchgehbarkeit=False, Dropanzahl=0):
         self.xPosition = xPosition
@@ -249,7 +235,7 @@ class Wesen():
         self.Hoehe = Hoehe
     
 class Spieler(Wesen):
-    def __init__(self, Level, Name, Schadenspunkte, Lebenspunkte, x, y, Breite, Hoehe,Slot1,Slot1Anzahl,Slot2,Slot2Anzahl,Slot3,Slot3Anzahl,Slot4,Slot4Anzahl,Slot5,Slot5Anzahl,Slot6,Slot6Anzahl, Pointer):
+    def __init__(self, Level, Name, Schadenspunkte, Lebenspunkte, x, y, Breite, Hoehe,Pointer):
         self.Level = Level
         self.Name = Name
         self.Schaden = Schadenspunkte
@@ -258,18 +244,6 @@ class Spieler(Wesen):
         self.y = y
         self.Breite = Breite
         self.Hoehe = Hoehe
-        self.Slot1 = Slot1
-        self.Slot1Anzahl = Slot1Anzahl
-        self.Slot2 = Slot2
-        self.Slot2Anzahl = Slot2Anzahl
-        self.Slot3 = Slot3
-        self.Slot3Anzahl = Slot3Anzahl
-        self.Slot4 = Slot4
-        self.Slot4Anzahl = Slot4Anzahl
-        self.Slot5 = Slot5
-        self.Slot5Anzahl = Slot5Anzahl
-        self.Slot6 = Slot6
-        self.Slot6Anzahl = Slot6Anzahl
         self.Pointer = Pointer
         super().__init__(Level, Name, Schadenspunkte, Lebenspunkte, x, y, Breite, Hoehe)
 
