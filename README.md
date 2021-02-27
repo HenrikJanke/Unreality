@@ -8,5 +8,3 @@ Das Lebens einer einfachen Person
 * Gegenstände ins Inventar bekommen
 * Platzieren von bereits bekommenen Blöcken
 
-## Zukünftige Spielfunktionen
-* Herstellen von anderen Spielobjekten (Schwerter/Spitzhacken)
